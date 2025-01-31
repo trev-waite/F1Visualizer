@@ -1,0 +1,6 @@
+[theme]
+primaryColor = "#8B0000"  # Dark Red (Ferrari-like)
+backgroundColor = "#28282B"  # Light black
+secondaryBackgroundColor = "#5E5E5D"  # Lighter Black
+textColor = "#F4EBD0"  # Light Beige
+font = "monospace"
