@@ -2,6 +2,7 @@ import fastf1
 import pandas as pd
 import plotly.express as px
 import streamlit as st
+import fastf1.plotting
 
 # Enable FastF1 cache
 fastf1.Cache.enable_cache('cache')
@@ -128,7 +129,7 @@ def create_lap_times_figure(session, selected_driver_names, selected_driver_numb
             if pd.notnull(x) else None
         )
         driver_info = session.get_driver(driver_number)
-        team_color = fastf1.plotting.get_team_color(driver_info['TeamName'], session)
+        team_color = fastf1.plotting.team_color(driver_info['TeamName'])
         fig_lap_times.add_scatter(
             x=driver_laps['LapNumber'],
             y=driver_laps['LapTimeSeconds'],
@@ -154,7 +155,7 @@ def create_speed_telemetry_figure(session, selected_driver_names, selected_drive
         telemetry = fastest_lap.get_telemetry()
         fastest_lap_time = f"{int(fastest_lap['LapTime'].total_seconds() // 60)}:{int(fastest_lap['LapTime'].total_seconds() % 60):02}.{int(fastest_lap['LapTime'].microseconds / 1000):03}"
         driver_info = session.get_driver(driver_number)
-        team_color = fastf1.plotting.get_team_color(driver_info['TeamName'], session)
+        team_color = fastf1.plotting.team_color(driver_info['TeamName'])
         fig_telemetry.add_scatter(
             x=telemetry['Distance'],
             y=telemetry['Speed'],
