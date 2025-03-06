@@ -78,7 +78,7 @@ def extract_race_data(year, event, session_type="Race"):
     session.load()
     
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"race_data_{event}_{year}_{session_type}.txt"
+    filename = f"race_data_{event}_{year}_{session_type}_large.txt"
     
     with open(filename, 'w', encoding='utf-8') as f:
         # Event Summary with clear structure

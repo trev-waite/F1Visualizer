@@ -158,7 +158,7 @@ def extract_race_data(year, event, session_type="Race"):
 if __name__ == "__main__":
     try:
         script_logger.info("🚦 Starting race data extraction script...")
-        output_file = extract_race_data(2024, "Bahrain", "Race")
+        output_file = extract_race_data(2024, "Miami", "Race")
         script_logger.info("🏁 Script completed successfully!")
     except Exception as e:
         script_logger.error(f"❌ Error during execution: {e}")
