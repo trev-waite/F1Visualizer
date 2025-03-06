@@ -5,16 +5,23 @@ import warnings
 import numpy as np
 import logging
 
-# Set up logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
-)
-logger = logging.getLogger(__name__)
+# Set FastF1 logging level first
+fastf1.set_log_level('CRITICAL')
 
-# Suppress specific FastF1 warnings - fixed pattern
-warnings.filterwarnings('ignore', message='Failed to preserve data type for column')
+# Set up logging for our script only
+script_logger = logging.getLogger('f1_data_extractor')
+script_logger.setLevel(logging.INFO)
+
+# Create console handler with formatting
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(
+    logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                     datefmt='%Y-%m-%d %H:%M:%S')
+)
+script_logger.addHandler(console_handler)
+
+# Ignore all warnings
+warnings.filterwarnings('ignore')
 
 def format_timedelta(td):
     """Format timedelta to readable string."""
@@ -64,7 +71,7 @@ def format_telemetry_data(telemetry):
 def extract_race_data(year, event, session_type="Race"):
     """Extract comprehensive race data in LLM-friendly format."""
     
-    logger.info(f"Starting data extraction for {event} {year} - {session_type}")
+    script_logger.info(f"🏎️ Starting data extraction for {event} {year} - {session_type}")
     
     fastf1.Cache.enable_cache('cache')
     session = fastf1.get_session(year, event, session_type)
@@ -169,13 +176,13 @@ def extract_race_data(year, event, session_type="Race"):
         f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} | FastF1 {fastf1.__version__}\n")
         f.write(f"{'='*50}\n")
     
-    logger.info(f"Data extraction complete. File saved as: {filename}")
+    script_logger.info(f"✅ Data extraction complete. File saved as: {filename}")
     return filename
 
 if __name__ == "__main__":
     try:
-        logger.info("Starting race data extraction script")
+        script_logger.info("🚦 Starting race data extraction script...")
         output_file = extract_race_data(2024, "Bahrain", "Race")
-        logger.info(f"Script completed successfully")
+        script_logger.info("🏁 Script completed successfully!")
     except Exception as e:
-        logger.error(f"Error during execution: {e}")
+        script_logger.error(f"❌ Error during execution: {e}")

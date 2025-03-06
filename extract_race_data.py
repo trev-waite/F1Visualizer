@@ -1,6 +1,23 @@
 import fastf1
 import pandas as pd
 from datetime import datetime
+import logging
+
+# Set FastF1 logging level first
+fastf1.set_log_level('CRITICAL')
+
+# Set up logging for our script only
+script_logger = logging.getLogger('f1_data_extractor')
+script_logger.setLevel(logging.INFO)
+
+# Create console handler with formatting
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(
+    logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                     datefmt='%Y-%m-%d %H:%M:%S')
+)
+script_logger.addHandler(console_handler)
+
 
 def format_timedelta(td):
     """Format timedelta to readable string."""
@@ -14,12 +31,14 @@ def format_timedelta(td):
 def extract_race_data(year, event, session_type="Race"):
     """Extract comprehensive race data in LLM-friendly format."""
     
+    script_logger.info(f"🏎️ Starting data extraction for {event} {year} - {session_type}")
+    
     fastf1.Cache.enable_cache('cache')
     session = fastf1.get_session(year, event, session_type)
     session.load()
     
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"race_data_{event}_{year}_{session_type}_{timestamp}.txt"
+    filename = f"race_data_{event}_{year}_{session_type}.txt"
     
     with open(filename, 'w', encoding='utf-8') as f:
         # Event Summary with clear structure
@@ -133,11 +152,13 @@ def extract_race_data(year, event, session_type="Race"):
         f.write(f"Data source: FastF1 {fastf1.__version__}\n")
         f.write(f"{'='*50}\n")
     
+    script_logger.info(f"✅ Data extraction complete. File saved as: {filename}")
     return filename
 
 if __name__ == "__main__":
     try:
+        script_logger.info("🚦 Starting race data extraction script...")
         output_file = extract_race_data(2024, "Bahrain", "Race")
-        print(f"Enhanced data has been saved to: {output_file}")
+        script_logger.info("🏁 Script completed successfully!")
     except Exception as e:
-        print(f"Error: {e}")
+        script_logger.error(f"❌ Error during execution: {e}")
